@@ -1,6 +1,7 @@
 package com.nags.nasainfo;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -15,6 +16,7 @@ import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
 import android.widget.Toast;
 
 import org.json.JSONArray;
@@ -44,6 +46,9 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        toolbar.setTitle("NASAInfo");
+        setSupportActionBar(toolbar);
 
         mGridView=findViewById(R.id.recyclerView_grid);
 
@@ -52,7 +57,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void loadRecyclerView() {
-        
+
         try {
             loadJSONFromAsset(getApplicationContext());
             JSONArray jsonArray= new JSONArray(json);
@@ -68,12 +73,29 @@ public class MainActivity extends AppCompatActivity {
             e.printStackTrace();
         }
 
+        onItemClick();
+
+    }
+
+    private void onItemClick() {
         ImageListAdapter adapter = new ImageListAdapter(infoModels,getApplicationContext());
         mGridView.setItemAnimator(new DefaultItemAnimator());
         mGridView.setAdapter(adapter);
         adapter.notifyDataSetChanged();
         StaggeredGridLayoutManager manager = new StaggeredGridLayoutManager(2,StaggeredGridLayoutManager.VERTICAL);
         mGridView.setLayoutManager(manager);
+
+        adapter.setOnItemClickListener(new ImageListAdapter.OnItemClickListener() {
+            @Override
+            public void onItemClick(View view, int position, InfoModel infoModel) {
+                InfoModel infoModel1=infoModels.get(position);
+
+                Intent intent= new Intent(MainActivity.this,ImageDescriptionActivity.class);
+                intent.putExtra("imageurl",infoModel1.getUrl());
+                intent.putExtra("imageExp",infoModel1.getExplanation());
+                startActivity(intent);
+            }
+        });
     }
 
 
@@ -103,4 +125,5 @@ public class MainActivity extends AppCompatActivity {
         return json;
 
     }
+
 }
