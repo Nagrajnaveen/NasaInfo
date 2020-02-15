@@ -1,4 +1,4 @@
-package com.nags.nasainfo;
+package com.nags.nasainfo.activity;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -10,6 +10,7 @@ import android.view.MenuItem;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.nags.nasainfo.R;
 import com.squareup.picasso.Picasso;
 
 public class ImageDescriptionActivity extends AppCompatActivity {
